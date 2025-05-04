@@ -5,8 +5,11 @@
 </template>
 
 <script lang="ts" setup>
-  //
+//
 </script>
 
 <style>
+#app {
+  color: rgb(var(--v-theme-font));
+}
 </style>

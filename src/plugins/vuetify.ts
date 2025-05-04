@@ -5,60 +5,67 @@
  */
 
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
+import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/styles";
 
 // Composables
-import { createVuetify, type ThemeDefinition } from 'vuetify'
-import colors from 'vuetify/util/colors'
+import { createVuetify, type ThemeDefinition } from "vuetify";
+import colors from "vuetify/util/colors";
 
-function createTheme (color:typeof colors.blue):ThemeDefinition{
+function createTheme(color: any): ThemeDefinition {
   return {
     colors: {
       primary: color.darken2,
       secondary: color.darken1,
       accent: color.darken3,
-      error: colors.red.base,
       info: color.base,
-      success: colors.green.base,
-      warning: colors.amber.base,
-      background: color.lighten5,
-      surface: colors.shades.white,
+      background: color.lighten4,
+      surface: color.lighten5,
     },
     dark: false,
     variables: {
-      'border-color': color.lighten3,
-      // 'theme-colors-opacity': 0.8,
+      font: color.darken4,
     },
-  }
+  };
 }
 
-function createDarkTheme (color:typeof colors.blue):ThemeDefinition{
+function createDarkTheme(color: any): ThemeDefinition {
   return {
     colors: {
-      primary: color.darken2,
-      secondary: color.darken1,
-      accent: color.darken3,
-      error: color.accent2,
+      primary: color.lighten2,
+      secondary: color.lighten3,
+      accent: color.lighten1,
       info: color.base,
-      success: color.accent3,
-      warning: color.base,
+      background: color.darken3,
+      surface: color.darken4,
     },
     dark: true,
     variables: {
-      'border-color': color.lighten3,
-      'theme-colors-opacity': 0.8,
+      "border-color": color.lighten3,
+      "theme-colors-opacity": 0.8,
     },
+  };
+}
+
+function generateTheme(): Record<string, ThemeDefinition> {
+  const themes: Record<string, ThemeDefinition> = {};
+
+  for (const key in colors) {
+    if (key != "shades") {
+      themes[`light-${key}`] = createTheme(colors[key as keyof typeof colors]);
+      themes[`dark-${key}`] = createDarkTheme(
+        colors[key as keyof typeof colors]
+      );
+    }
   }
+  console.log("themes", themes);
+  return themes;
 }
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'light-blue',
-    themes: {
-      'light-blue':createTheme(colors.lightBlue),
-      'dark-blue':createDarkTheme(colors.blue),
-    },
+    defaultTheme: "light-teal",
+    themes: generateTheme(),
   },
-})
+});

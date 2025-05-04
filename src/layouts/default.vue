@@ -1,11 +1,13 @@
 <template>
-  <m-header></m-header>
-  <v-row style="margin: 0;">
-    <m-sidebar></m-sidebar>
+  <div class="app-container">
+    <m-header></m-header>
     <div class="app-main">
-      <router-view />
+      <m-sidebar></m-sidebar>
+      <div class="app-viewport">
+        <router-view />
+      </div>
     </div>
-  </v-row>
+  </div>
   <!-- <AppFooter /> -->
 </template>
 
@@ -13,10 +15,26 @@
 //
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
 .app-main {
-  height: calc(100% - 70px);
-  width: calc(100% - 100px);
-  overflow: auto;
+  height: calc(100% - 60px);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.app-viewport {
+  height: 100%;
+  width: calc(100% - 110px);
+  margin-left: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 50px;
 }
 </style>

@@ -9,11 +9,20 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    copy: typeof import('./components/SearchAlbum copy.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    LatestSong: typeof import('./components/LatestSong.vue')['default']
     MHeader: typeof import('./components/MHeader.vue')['default']
     MSidebar: typeof import('./components/MSidebar.vue')['default']
     MSidebarCell: typeof import('./components/MSidebarCell.vue')['default']
+    MusicPlayer: typeof import('./components/MusicPlayer.vue')['default']
+    RecommendedAlbum: typeof import('./components/RecommendedAlbum.vue')['default']
+    RecommendedSong: typeof import('./components/RecommendedSong.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchAlbum: typeof import('./components/SearchAlbum.vue')['default']
+    SearchArtist: typeof import('./components/SearchArtist.vue')['default']
+    SearchSong: typeof import('./components/SearchSong.vue')['default']
+    SongList: typeof import('./components/SongList.vue')['default']
   }
 }

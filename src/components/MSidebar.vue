@@ -1,8 +1,10 @@
 <template>
     <div class="m-sidebar-wrapper">
         <div ref="sidebar" class="m-sidebar elevation-5" border>
-            <m-sidebar-cell v-for="option in options" :name="option.name" :icon="option.icon"></m-sidebar-cell>
+            <m-sidebar-cell @click="openPage(option.path)" v-for="option in options" :name="option.name"
+                :icon="option.icon"></m-sidebar-cell>
         </div>
+        <music-player />
     </div>
 </template>
 
@@ -11,10 +13,11 @@
     width: 100px;
     height: 100%;
     position: relative;
+    z-index: 500;
 }
 
 .m-sidebar {
-    background-color: #f5f5f5;
+    background-color: rgb(var(--v-theme-surface));
     top: 50%;
     left: 25px;
     box-sizing: content-box;
@@ -33,21 +36,23 @@
 import { animate, createSpring } from 'animejs';
 
 const sidebar = ref<HTMLElement | null>(null);
-
+const router = useRouter();
 const options = ref([
     {
         icon: 'mdi-home',
         name: 'Home',
-    },
-    {
-        icon: 'mdi-account',
-        name: 'Profile',
+        path: '/'
     },
     {
         icon: 'mdi-cog',
         name: 'Settings',
+        path: '/settings'
     }
 ])
+
+function openPage(path: string) {
+    router.push(path);
+}
 
 onMounted(() => {
     if (sidebar.value) {
