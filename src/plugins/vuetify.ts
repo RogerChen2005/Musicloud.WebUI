@@ -58,7 +58,7 @@ function generateTheme(): Record<string, ThemeDefinition> {
       );
     }
   }
-  console.log("themes", themes);
+
   return themes;
 }
 
