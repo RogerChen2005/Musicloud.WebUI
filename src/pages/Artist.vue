@@ -8,7 +8,7 @@
             </v-col>
         </v-row>
         <div class="artist-album-container">
-            <div class="recommended-album-item" v-for="album in artist?.albums" :key="album.id">
+            <div v-for="album in artist?.albums" :key="album.id">
                 <v-card @click="openAlbum(album)" link class="ma-2" width="200" height="250">
                     <v-img height="150" cover :src="`/api/cover/${album.coverPath}`"></v-img>
                     <v-card-title class="text-subtitle-1">{{ album.title }}</v-card-title>
@@ -43,7 +43,7 @@ function init() {
         }).then((res) => {
             artist.value = res.data;
             nextTick(() => {
-                animate('.artist-main', {
+                animate('.artist-album-container', {
                     opacity: [0, 1],
                     translateY: [50, 0],
                     duration: 100,
@@ -67,6 +67,5 @@ onMounted(() => {
 .artist-album-container {
     display: flex;
     flex-wrap: wrap;
-    ;
 }
 </style>

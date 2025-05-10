@@ -33,7 +33,7 @@
                         <td><v-chip v-for="artist in song.artists" @click="openArtist(artist)">{{ artist.name
                                 }}</v-chip>
                         </td>
-                        <td><v-btn variant="tonal" icon="mdi-play" density="comfortable" />
+                        <td><v-btn variant="tonal" icon="mdi-play" density="comfortable" @click="playSong(song, album?.coverPath)"/>
                         </td>
                     </tr>
                 </tbody>
@@ -45,11 +45,13 @@
 <script setup lang="ts">
 import { openArtist, openAlbum } from '@/composables/openItem';
 import axios from '@/request'
+import { useAppStore } from '@/stores/app';
 import { animate, createSpring } from 'animejs';
 
 const route = useRoute();
 const id = computed<string>(() => route.query.id as string);
 const album = ref<Dto.AlbumWithMusicsArtistsDto>();
+const appStore = useAppStore();
 
 function init() {
     animate('.album-header', {
@@ -75,6 +77,10 @@ function init() {
             })
         });
     }
+}
+
+function playSong(song: Dto.MusicWithAlbumArtistDto,coverPath?: string) {
+    appStore.startPlay(song, coverPath);
 }
 
 watch(id, () => {

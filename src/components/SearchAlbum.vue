@@ -4,7 +4,7 @@
     <v-slide-group show-arrows class="mb-4">
         <v-slide-group-item v-for="album in albums" :key="album.id">
             <div class="search-album-item">
-                <v-card class="ma-2" width="200" height="250">
+                <v-card class="ma-2" width="200" height="250" link @click="openAlbum(album)">
                     <v-img height="150" cover :src="`/api/cover/${album.coverPath}`"></v-img>
                     <v-card-title class="text-subtitle-1">{{ album.title }}</v-card-title>
                     <v-card-subtitle>{{ album.genre.join(",") }}</v-card-subtitle>
@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import { openAlbum } from '@/composables/openItem';
 import { animate, createSpring, stagger } from 'animejs';
 
 const props = defineProps({

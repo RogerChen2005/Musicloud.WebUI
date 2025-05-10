@@ -1,64 +1,18 @@
-<template>
-    <div class="settings-page mt-4">
-        <section class="mb-4">
-            <h2 class="text-h4 font-weight-bold mb-2">设置</h2>
-            <p class="text-h6 font-weight-bold mb-2">数据库管理</p>
-        </section>
-
-        <section class="mb-4">
-
-            <v-alert v-if="alert.show" dismissible>
-                {{ alert.message }}
-            </v-alert>
-
-            <div>
-                <span class="mr-4">重建数据库</span>
-                <v-btn color="error" @click="confirmRebuild">
-                    重建
-                </v-btn>
-            </div>
-        </section>
-
-        <section class="mb-4">
-
-            <v-alert v-if="alert.show" dismissible>
-                {{ alert.message }}
-            </v-alert>
-
-            <div>
-                <v-select label="选择主题" v-model="selectTheme" :items="themeOptions" item-title="text" item-value="value"
-                    @update:modelValue="changeTheme" width="300">
-                </v-select>
-                <v-select label="选择颜色" v-model="selectColor" :items="colorOptions" item-title="text" item-value="value"
-                    @update:modelValue="changeTheme" width="300">
-                </v-select>
-            </div>
-        </section>
-
-        <v-dialog v-model="dialog" max-width="400">
-            <v-card>
-                <v-card-title>确认操作</v-card-title>
-                <v-card-text>
-                    您确定要重建数据库吗？此操作不可逆，可能导致数据丢失。
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false">取消</v-btn>
-                    <v-btn color="error" @click="rebuildDatabase">确认重建</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-    </div>
-</template>
-
 <script lang="ts" setup>
 import colors from 'vuetify/util/colors';
 import { useTheme } from 'vuetify';
+import axios from '@/request';
+import { animate, createSpring, stagger } from 'animejs';
+
+interface resetResult{
+    show: boolean;
+    type: "success" | "error";
+    message: string;
+}
 
 const dialog = ref(false);
 const theme = useTheme();
-const alert = ref({
+const resetResult = ref<resetResult>({
     show: false,
     type: 'success',
     message: ''
@@ -94,14 +48,96 @@ function getColorOptions() {
     return options;
 }
 function rebuildDatabase() {
-    alert.value = {
-        show: true,
-        type: 'success',
-        message: '数据库重建成功！'
-    };
+    axios.post('/database/reset').then((res) => {
+        if (res.status === 200) {
+            resetResult.value = {
+                show: true,
+                type: 'success',
+                message: '数据库重建成功！'
+            };
+        } else {
+            resetResult.value = {
+                show: true,
+                type: 'error',
+                message: res.data.msg
+            };
+        }
+    }).catch((err) => {
+        resetResult.value = {
+            show: true,
+            type: 'error',
+            message: err.message
+        };
+    });
     dialog.value = false;
 }
+
 const confirmRebuild = () => {
     dialog.value = true;
 };
+
+onMounted(()=>{
+    animate('.settings-page section',{
+        opacity: [0, 1],
+        translateX: [50, 0],
+        ease: createSpring(),
+        delay: stagger(100)
+    })
+})
 </script>
+
+<template>
+    <div class="settings-page mt-4 ml-4">
+        <section class="mb-4">
+            <h2 class="text-h4 font-weight-bold mb-2">设置</h2>
+        </section>
+
+        <section class="mb-4">
+            <p class="text-h6 font-weight-bold mb-2">数据库管理</p>
+
+            <v-alert
+                v-if="resetResult.show"
+                :text="resetResult.message"
+                :title="resetResult.type === 'error' ? '错误' : '成功'"
+                :type="resetResult.type"
+                class="mb-4"
+                width="90%"
+            ></v-alert>
+
+            <div>
+                <span class="mr-4">重建数据库</span>
+                <v-btn color="error" @click="confirmRebuild">
+                    重建
+                </v-btn>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <p class="text-h6 font-weight-bold mb-2">主题管理</p>
+
+            <div>
+                <v-select label="选择主题" v-model="selectTheme" :items="themeOptions" item-title="text" item-value="value"
+                    @update:modelValue="changeTheme" width="300">
+                </v-select>
+                <v-select label="选择颜色" v-model="selectColor" :items="colorOptions" item-title="text" item-value="value"
+                    @update:modelValue="changeTheme" width="300">
+                </v-select>
+            </div>
+        </section>
+
+        <v-dialog v-model="dialog" max-width="400">
+            <v-card>
+                <v-card-title>确认操作</v-card-title>
+                <v-card-text>
+                    您确定要重建数据库吗？此操作不可逆，可能导致数据丢失。
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false">取消</v-btn>
+                    <v-btn color="error" @click="rebuildDatabase">确认重建</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+    </div>
+</template>

@@ -39,6 +39,8 @@
 import { openArtist, openAlbum } from '@/composables/openItem';
 import { useAppStore } from '@/stores/app';
 
+const appStore = useAppStore();
+
 defineProps({
     songs: {
         type: Array as PropType<Dto.MusicWithAlbumArtistDto[]>,
@@ -47,7 +49,6 @@ defineProps({
 })
 
 function playSong(song: Dto.MusicWithAlbumArtistDto) {
-    const appStore = useAppStore();
     appStore.startPlay(song, song.album?.coverPath);
 }
 </script>
